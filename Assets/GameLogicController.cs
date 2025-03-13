@@ -8,35 +8,43 @@ public class GameLogicController : MonoBehaviour
     private GameObject YellowChip;
     public int turn = 1;
     public string playerTurn;
+    public bool roundActive;
 
-    void TurnChecker()
+    void RoundChecker()
     {
-        
+
     }
     
     void RedSpawn()
     {
-        turn ++;
-        RedChip = Instantiate(redChip);
+        if (roundActive == true)
+        {
+            turn ++;
+            RedChip = Instantiate(redChip);
+        }
     }
     void YellowSpawn()
     {
-        turn = turn - 2;
-        YellowChip = Instantiate(yellowChip);
+        if (roundActive == true)
+        {
+            turn --;
+            YellowChip = Instantiate(yellowChip);
+            roundActive = false;
+        }
     }
 
 
     void Update()
     {
-        if(Input.GetKeyDown(KeyCode.Space) && turn == 1)
+        if(Input.GetKeyDown(KeyCode.Space) && roundActive == false)
         {
-            turn++;
+            roundActive = true;
         }
-        if(Input.GetKeyDown(KeyCode.Mouse0) && turn == 2)
+        if(Input.GetKeyDown(KeyCode.Mouse0) && turn == 1)
         {
             RedSpawn();
         }
-        else if(Input.GetKeyDown(KeyCode.Mouse1) && turn == 3)
+        else if(Input.GetKeyDown(KeyCode.Mouse1) && turn == 2)
         {
             YellowSpawn();
         }
