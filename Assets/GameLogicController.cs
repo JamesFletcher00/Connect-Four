@@ -2,15 +2,44 @@ using UnityEngine;
 
 public class GameLogicController : MonoBehaviour
 {
+    public GameObject redChip;
+    private GameObject RedChip;
+    public GameObject yellowChip;
+    private GameObject YellowChip;
+    public int turn = 1;
+    public string playerTurn;
 
-    public Rigidbody c4Red;
-    // Update is called once per frame
+    void TurnChecker()
+    {
+        
+    }
+    
+    void RedSpawn()
+    {
+        turn ++;
+        RedChip = Instantiate(redChip);
+    }
+    void YellowSpawn()
+    {
+        turn = turn - 2;
+        YellowChip = Instantiate(yellowChip);
+    }
+
+
     void Update()
     {
-        if(Input.GetKeyDown(KeyCode.Mouse0))
+        if(Input.GetKeyDown(KeyCode.Space) && turn == 1)
         {
-            Rigidbody clone;
-            clone = Instanstiate(c4Red, transform.position, transform.rotation);
+            turn++;
         }
+        if(Input.GetKeyDown(KeyCode.Mouse0) && turn == 2)
+        {
+            RedSpawn();
+        }
+        else if(Input.GetKeyDown(KeyCode.Mouse1) && turn == 3)
+        {
+            YellowSpawn();
+        }
+        Debug.Log(turn);
     }
 }
