@@ -62,13 +62,31 @@ PrefabInstance:
     m_AddedComponents:
     - targetCorrespondingSourceObject: {fileID: 919132149155446097, guid: dea564d6c2e48854b8efa708d6194eff, type: 3}
       insertIndex: -1
+      addedObject: {fileID: 2751832174611352494}
+    - targetCorrespondingSourceObject: {fileID: 919132149155446097, guid: dea564d6c2e48854b8efa708d6194eff, type: 3}
+      insertIndex: -1
       addedObject: {fileID: 3511504722902879082}
+    - targetCorrespondingSourceObject: {fileID: 919132149155446097, guid: dea564d6c2e48854b8efa708d6194eff, type: 3}
+      insertIndex: -1
+      addedObject: {fileID: 6246526076578618722}
   m_SourcePrefab: {fileID: 100100000, guid: dea564d6c2e48854b8efa708d6194eff, type: 3}
 --- !u!1 &7857708419565910905 stripped
 GameObject:
   m_CorrespondingSourceObject: {fileID: 919132149155446097, guid: dea564d6c2e48854b8efa708d6194eff, type: 3}
   m_PrefabInstance: {fileID: 7047387935550686760}
   m_PrefabAsset: {fileID: 0}
+--- !u!114 &2751832174611352494
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 7857708419565910905}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 62fa1ae9d50c0b14d903164e6e4eed7f, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!54 &3511504722902879082
 Rigidbody:
   m_ObjectHideFlags: 0
@@ -95,4 +113,25 @@ Rigidbody:
   m_IsKinematic: 0
   m_Interpolate: 0
   m_Constraints: 0
-  m_CollisionDetection: 0
+  m_CollisionDetection: 1
+--- !u!65 &6246526076578618722
+BoxCollider:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 7857708419565910905}
+  m_Material: {fileID: 0}
+  m_IncludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_ExcludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_LayerOverridePriority: 0
+  m_IsTrigger: 0
+  m_ProvidesContacts: 0
+  m_Enabled: 1
+  serializedVersion: 3
+  m_Size: {x: 0.019999998, y: 0.019999998, z: 0.021662625}
+  m_Center: {x: 0, y: 0, z: 0}
