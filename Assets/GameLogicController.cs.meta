@@ -3,7 +3,16 @@ guid: d60859c90f4fd244783bd3178cee7286
 MonoImporter:
   externalObjects: {}
   serializedVersion: 2
-  defaultReferences: []
+  defaultReferences:
+  - redChip: {fileID: 919132149155446097, guid: dea564d6c2e48854b8efa708d6194eff, type: 3}
+  - yellowChip: {fileID: 919132149155446097, guid: 737c93041f081bd48994dd8cb2062627, type: 3}
+  - A7Spawn: {instanceID: 0}
+  - B7Spawn: {instanceID: 0}
+  - C7Spawn: {instanceID: 0}
+  - D7Spawn: {instanceID: 0}
+  - E7Spawn: {instanceID: 0}
+  - F7Spawn: {instanceID: 0}
+  - G7Spawn: {instanceID: 0}
   executionOrder: 0
   icon: {instanceID: 0}
   userData: 

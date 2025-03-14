@@ -7,7 +7,7 @@ public class GameLogicController : MonoBehaviour
     public GameObject yellowChip;
     private GameObject YellowChip;
     public Transform A7Spawn, B7Spawn, C7Spawn, D7Spawn, E7Spawn, F7Spawn, G7Spawn;
-    public int turn = 1;
+    public bool redTurn = true;
     public string playerTurn;
     public bool roundActive;
 
@@ -26,14 +26,7 @@ public class GameLogicController : MonoBehaviour
 
                 if (spawnPoint != null)
                 {
-                    if (turn == 1)
-                    {
-                        RedSpawn(spawnPoint.position);
-                    }
-                    if (turn == 2)
-                    {
-                        YellowSpawn(spawnPoint.position);
-                    }
+                    ChipSpawner(spawnPoint.position);
                 }
                 
             }
@@ -47,29 +40,26 @@ public class GameLogicController : MonoBehaviour
         if(tag == "C") return C7Spawn;
         if(tag == "D") return D7Spawn;
         if(tag == "E") return E7Spawn;
-        if(tag =="F") return F7Spawn;
+        if(tag == "F") return F7Spawn;
         if(tag == "G") return G7Spawn;
 
         return null;
     }
 
-    void RedSpawn(Vector3 position)
-    {            
+    void ChipSpawner(Vector3 position)
+    {        
         Quaternion rotation = Quaternion.Euler(0, 90, 0);
-        if (roundActive == true)
+
+        if (redTurn && roundActive)
         {
-            turn ++;
-            RedChip = Instantiate(redChip, position, rotation);
+            redTurn = false;
+            RedChip = Instantiate(redChip, position, rotation);            
+        }
+        else if (!redTurn&& roundActive)
+        {
+            redTurn = true;
+            YellowChip = Instantiate(yellowChip, position, rotation); 
         }
     }
 
-    void YellowSpawn(Vector3 position)
-    {
-        Quaternion rotation = Quaternion.Euler(0, 90, 0);
-        if(roundActive == true)
-        {
-            turn --;
-            YellowChip = Instantiate(yellowChip, position, rotation);        
-        }
-    }
 }
