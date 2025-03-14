@@ -14,6 +14,11 @@ public class GameLogicController : MonoBehaviour
     {
 
     }
+
+    void ChipSpawner()
+    {
+
+    }
     
     void RedSpawn()
     {
@@ -36,6 +41,16 @@ public class GameLogicController : MonoBehaviour
 
     void Update()
     {
+        if(Input.GetKeyDown(KeyCode.Mouse0))
+        {
+            Ray ray = Camera.main.ScreenPointToRay(Input.mousePosition);
+            RaycastHit hit;
+
+            if (Physics.Raycast(ray, out hit))
+            {
+                Debug.Log("" + hit.collider.gameObject.name);
+            }
+        }
         if(Input.GetKeyDown(KeyCode.Space) && roundActive == false)
         {
             roundActive = true;
