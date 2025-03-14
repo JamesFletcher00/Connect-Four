@@ -55,7 +55,7 @@ public class GameLogicController : MonoBehaviour
             redTurn = false;
             RedChip = Instantiate(redChip, position, rotation);            
         }
-        else if (!redTurn&& roundActive)
+        else if (!redTurn && roundActive)
         {
             redTurn = true;
             YellowChip = Instantiate(yellowChip, position, rotation); 
