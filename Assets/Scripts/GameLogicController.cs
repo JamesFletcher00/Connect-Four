@@ -32,6 +32,7 @@ public class GameLogicController : MonoBehaviour
             {
                 string columnTag = hit.collider.tag;
                 Transform spawnPoint = SpawnOnGrid(columnTag);
+                Debug.Log(hit.collider.gameObject.name);
 
                 if (spawnPoint != null)
                 {
@@ -87,6 +88,7 @@ public class GameLogicController : MonoBehaviour
 
         return null;
     }
+    private int[,] gridState = new int[7, 6]; // 7 columns (A-G), 6 rows (1-6)
 
     void ChipSpawner(string columnTag)
     {        
@@ -94,41 +96,86 @@ public class GameLogicController : MonoBehaviour
         Transform spawnPoint = SpawnOnGrid(columnTag);
 
         Transform targetSlot = GetNextAvailableSlot(columnTag);
+        int columnIndex = columnTag[0] - 'A';
+        int rowIndex = columnHeights[columnTag]; 
 
         if (targetSlot == null) return; // No available slot, column is full
 
         if (redTurn && roundActive)
         {
             redTurn = false;
-            chip = Instantiate(redChip, spawnPoint.position, rotation);            
+            chip = Instantiate(redChip, spawnPoint.position, rotation);   
+            gridState[columnIndex, rowIndex] = 1;      //stores red chip in grid     
         }
         else if (!redTurn && roundActive)
         {
             redTurn = true;
-            chip = Instantiate(yellowChip, spawnPoint.position, rotation); 
+            chip = Instantiate(yellowChip, spawnPoint.position, rotation);
+            gridState[columnIndex, rowIndex] = -1;  //stores yellow chip in grid
         }
         else
         {
             return;
         }
 
-        StartCoroutine(ChipMovement(chip, targetSlot.position, columnTag));
+        StartCoroutine(ChipMovement(chip, targetSlot.position, columnTag, columnIndex, rowIndex));
 
     }
 
-    IEnumerator ChipMovement(GameObject chip, Vector3 targetPosition, string columnTag)
+    IEnumerator ChipMovement(GameObject chip, Vector3 targetPosition, string columnTag, int col, int row)
     {
-    float speed = 5f; // Adjust for slower/faster fall
-    while (chip.transform.position.y > targetPosition.y)
+        float speed = 5f; // Adjust for slower/faster fall
+        while (chip.transform.position.y > targetPosition.y)
+        {
+            chip.transform.position = Vector3.MoveTowards(
+                chip.transform.position, targetPosition, speed * Time.deltaTime);
+            yield return null;
+        }
+
+        chip.transform.position = targetPosition; // Ensure precise stop
+        columnHeights[columnTag]++;
+
+        if (CheckForWin(col, row))
+        {
+            roundActive = false;
+            Debug.Log("Game Over! " + (gridState[col, row] == 1 ? "Red" : "Yellow") + " Wins!");
+        }
+    }
+    bool CheckForWin(int col, int row)
     {
-        chip.transform.position = Vector3.MoveTowards(
-            chip.transform.position, targetPosition, speed * Time.deltaTime);
-        yield return null;
-    }
+        int player = gridState[col, row];
+        if (player == 0) return false; // Empty slot, no win possible
 
-    chip.transform.position = targetPosition; // Ensure precise stop
-    columnHeights[columnTag]++;
+        return CheckDirection(col, row, 1, 0, player) // Horizontal
+            || CheckDirection(col, row, 0, 1, player) // Vertical
+            || CheckDirection(col, row, 1, 1, player) // Diagonal \
+            || CheckDirection(col, row, 1, -1, player); // Diagonal /
     }
+    bool CheckDirection(int col, int row, int colDir, int rowDir, int player)
+    {
+        int count = 1; // Include the placed chip
 
+        // Check in the positive direction
+        for (int i = 1; i < 4; i++)
+        {
+            int checkCol = col + i * colDir;
+            int checkRow = row + i * rowDir;
+            if (checkCol < 0 || checkCol >= 7 || checkRow < 0 || checkRow >= 6) break;
+            if (gridState[checkCol, checkRow] == player) count++;
+            else break;
+        }
+
+        // Check in the negative direction
+        for (int i = 1; i < 4; i++)
+        {
+            int checkCol = col - i * colDir;
+            int checkRow = row - i * rowDir;
+            if (checkCol < 0 || checkCol >= 7 || checkRow < 0 || checkRow >= 6) break;
+            if (gridState[checkCol, checkRow] == player) count++;
+            else break;
+        }
+
+        return count >= 4;
+    }
 
 }
