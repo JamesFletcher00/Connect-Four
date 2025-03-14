@@ -6,13 +6,7 @@ public class GameLogicController : MonoBehaviour
     private GameObject RedChip;
     public GameObject yellowChip;
     private GameObject YellowChip;
-    public Transform A7Spawn;
-    public Transform B7Spawn;
-    public Transform C7Spawn;
-    public Transform D7Spawn;
-    public Transform E7Spawn;
-    public Transform F7Spawn;
-    public Transform G7Spawn;
+    public Transform A7Spawn, B7Spawn, C7Spawn, D7Spawn, E7Spawn, F7Spawn, G7Spawn;
     public int turn = 1;
     public string playerTurn;
     public bool roundActive;
@@ -32,52 +26,50 @@ public class GameLogicController : MonoBehaviour
 
                 if (spawnPoint != null)
                 {
-                    SpawnItem(spawnPoint.position);
+                    if (turn == 1)
+                    {
+                        RedSpawn(spawnPoint.position);
+                    }
+                    if (turn == 2)
+                    {
+                        YellowSpawn(spawnPoint.position);
+                    }
                 }
+                
             }
         }
     }
-    void RoundChecker()
-    {
 
+    Transform SpawnOnGrid(string tag)
+    {
+        if(tag == "A") return A7Spawn;
+        if(tag == "B") return B7Spawn;
+        if(tag == "C") return C7Spawn;
+        if(tag == "D") return D7Spawn;
+        if(tag == "E") return E7Spawn;
+        if(tag =="F") return F7Spawn;
+        if(tag == "G") return G7Spawn;
+
+        return null;
     }
 
-    void SpawnOnGrid(string tag)
-    {
-        switch(tag)
-        {
-            case "A":
-                return A7spawn; break;
-            case "B":
-                return B7spawn; break;
-            case "C":
-                return C7spawn; break;
-            case "D":
-                return D7spawn; break;
-            case "E":
-                return E7spawn; break;
-            case "F":
-                return F7spawn; break;
-            case G:
-                return G7spawn; break;
-            default:
-                return null;
-
-        }
-    }
-    void ChipSpawner()
-    {
+    void RedSpawn(Vector3 position)
+    {            
+        Quaternion rotation = Quaternion.Euler(0, 90, 0);
         if (roundActive == true)
-            if (turn == 1)
-            {
-                turn ++;
-                RedChip = Instantiate(redChip, position, Quarternion.identity);
-            }
-            if (turn == 2)
-            {
-                turn --;
-                YellowChip = Instantiate(yellowChip, position, Quarternion.identity);
-            }
+        {
+            turn ++;
+            RedChip = Instantiate(redChip, position, rotation);
+        }
     }
 
+    void YellowSpawn(Vector3 position)
+    {
+        Quaternion rotation = Quaternion.Euler(0, 90, 0);
+        if(roundActive == true)
+        {
+            turn --;
+            YellowChip = Instantiate(yellowChip, position, rotation);        
+        }
+    }
 }
