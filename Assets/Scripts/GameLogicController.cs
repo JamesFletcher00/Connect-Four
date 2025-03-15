@@ -4,6 +4,7 @@ using System.Collections.Generic;
 
 public class GameLogicController : MonoBehaviour
 {
+    private bool isChipFalling = false;
     public GameObject redChip;
     public GameObject yellowChip;
     private GameObject chip;
@@ -23,23 +24,27 @@ public class GameLogicController : MonoBehaviour
 
     void Update()
     {
-        if(Input.GetKeyDown(KeyCode.Mouse0))
+        if(isChipFalling)
         {
-            Ray ray = Camera.main.ScreenPointToRay(Input.mousePosition);
-            RaycastHit hit;
-
-            if (Physics.Raycast(ray, out hit))
+            if(Input.GetKeyDown(KeyCode.Mouse0))
             {
-                string columnTag = hit.collider.tag;
-                Transform spawnPoint = SpawnOnGrid(columnTag);
-                Debug.Log(hit.collider.gameObject.name);
+                Ray ray = Camera.main.ScreenPointToRay(Input.mousePosition);
+                RaycastHit hit;
 
-                if (spawnPoint != null)
+                if (Physics.Raycast(ray, out hit))
                 {
-                    ChipSpawner(columnTag);
+                    string columnTag = hit.collider.tag;
+                    Transform spawnPoint = SpawnOnGrid(columnTag);
+                    Debug.Log(hit.collider.gameObject.name);
 
-                }
+                    if (spawnPoint != null)
+                    {
+                        isChipFalling = true;
+                        ChipSpawner(columnTag);
+
+                    }
                 
+                }
             }
         }
     }
@@ -134,6 +139,8 @@ public class GameLogicController : MonoBehaviour
 
         chip.transform.position = targetPosition; // Ensure precise stop
         columnHeights[columnTag]++;
+
+        isChipFalling = false;
 
         if (CheckForWin(col, row))
         {
