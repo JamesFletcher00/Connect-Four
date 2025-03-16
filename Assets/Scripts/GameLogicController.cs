@@ -24,29 +24,29 @@ public class GameLogicController : MonoBehaviour
 
     void Update()
     {
-        if(isChipFalling)
+        if(isChipFalling) return;
+        
+        if(Input.GetKeyDown(KeyCode.Mouse0))
         {
-            if(Input.GetKeyDown(KeyCode.Mouse0))
+            Ray ray = Camera.main.ScreenPointToRay(Input.mousePosition);
+            RaycastHit hit;
+
+            if (Physics.Raycast(ray, out hit))
             {
-                Ray ray = Camera.main.ScreenPointToRay(Input.mousePosition);
-                RaycastHit hit;
+                string columnTag = hit.collider.tag;
+                Transform spawnPoint = SpawnOnGrid(columnTag);
+                Debug.Log(hit.collider.gameObject.name);
 
-                if (Physics.Raycast(ray, out hit))
+                if (spawnPoint != null && columnHeights[columnTag] < 6)
                 {
-                    string columnTag = hit.collider.tag;
-                    Transform spawnPoint = SpawnOnGrid(columnTag);
-                    Debug.Log(hit.collider.gameObject.name);
+                    ChipSpawner(columnTag);
+                    isChipFalling = true;
 
-                    if (spawnPoint != null)
-                    {
-                        isChipFalling = true;
-                        ChipSpawner(columnTag);
-
-                    }
-                
                 }
+            
             }
         }
+    
     }
 
     private Dictionary<string, int> columnHeights = new Dictionary<string, int>
@@ -96,7 +96,12 @@ public class GameLogicController : MonoBehaviour
     private int[,] gridState = new int[7, 6]; // 7 columns (A-G), 6 rows (1-6)
 
     void ChipSpawner(string columnTag)
-    {        
+    {   
+        if (isChipFalling) 
+        {
+            Debug.Log("ChipSpawner blocked: a chip is still falling.");
+            return; 
+        }  
         Quaternion rotation = Quaternion.Euler(0, 90, 0);
         Transform spawnPoint = SpawnOnGrid(columnTag);
 
@@ -122,7 +127,7 @@ public class GameLogicController : MonoBehaviour
         {
             return;
         }
-
+        isChipFalling = true;
         StartCoroutine(ChipMovement(chip, targetSlot.position, columnTag, columnIndex, rowIndex));
 
     }
