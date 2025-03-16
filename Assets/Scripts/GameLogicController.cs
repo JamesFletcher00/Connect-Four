@@ -23,6 +23,9 @@ public class GameLogicController : MonoBehaviour
     public string playerTurn;
     public bool roundActive;
 
+    public int redScore;
+    public int yellowScore;
+
 
     void Update()
     {
