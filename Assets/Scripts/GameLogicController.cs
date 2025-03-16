@@ -138,7 +138,7 @@ public class GameLogicController : MonoBehaviour
         while (chip.transform.position.y > targetPosition.y)
         {
             chip.transform.position = Vector3.MoveTowards(
-                chip.transform.position, targetPosition, speed * Time.deltaTime);
+                chip.transform.position, targetPosition, (speed*2) * Time.deltaTime);
             yield return null;
         }
 
