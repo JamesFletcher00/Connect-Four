@@ -1,6 +1,8 @@
 using UnityEngine;
 using System.Collections;
 using System.Collections.Generic;
+using UnityEngine.UI;
+using TMPro;
 
 public class GameLogicController : MonoBehaviour
 {
@@ -20,15 +22,25 @@ public class GameLogicController : MonoBehaviour
 
     public Transform A7Spawn, B7Spawn, C7Spawn, D7Spawn, E7Spawn, F7Spawn, G7Spawn;
     public bool redTurn = true;
-    public string playerTurn;
+    public TMP_Text playerTurn;
     public bool roundActive;
 
+    public TMP_Text RedScore;
+    public TMP_Text YellowScore;
     public int redScore;
     public int yellowScore;
 
 
     void Update()
     {
+        if(redTurn){
+            playerTurn.text = "Red's Turn!";
+            playerTurn.color = Color.red;
+        }else if (!redTurn){
+            playerTurn.text = "Yellow's Turn!";
+            playerTurn.color = Color.yellow;
+        }
+
         if(isChipFalling) return;
         
         Ray ray = Camera.main.ScreenPointToRay(Input.mousePosition);
@@ -191,7 +203,8 @@ public class GameLogicController : MonoBehaviour
         if (CheckForWin(col, row))
         {
             roundActive = false;
-            Debug.Log("Game Over! " + (gridState[col, row] == 1 ? "Red" : "Yellow") + " Wins!");
+
+            playerTurn.text = ("Game Over! " + (gridState[col, row] == 1 ? "Red" : "Yellow") + " Wins!");
         }
     }
     bool CheckForWin(int col, int row)
