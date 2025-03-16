@@ -8,6 +8,8 @@ public class GameLogicController : MonoBehaviour
     public GameObject redChip;
     public GameObject yellowChip;
     private GameObject chip;
+    public GameObject arrow;
+    private GameObject playerArrow;
     public Transform A1, A2, A3, A4, A5, A6;
     public Transform B1, B2, B3, B4, B5, B6;
     public Transform C1, C2, C3, C4, C5, C6;
@@ -26,27 +28,35 @@ public class GameLogicController : MonoBehaviour
     {
         if(isChipFalling) return;
         
+        Ray ray = Camera.main.ScreenPointToRay(Input.mousePosition);
+        RaycastHit hit;
+
+        if (Physics.Raycast(ray, out hit))
+        {
+            string columnTag = hit.collider.tag;
+            Transform spawnPoint = SpawnOnGrid(columnTag);
+            Debug.Log(hit.collider.gameObject.name);
+
+            if (columnPositions.ContainsKey(columnTag))
+            {
+                PlayerArrow(columnTag); // Call PlayerArrow function
+            }
+            else
+            {
+                arrowIndicator.SetActive(false);
+            }
+
         if(Input.GetKeyDown(KeyCode.Mouse0))
         {
-            Ray ray = Camera.main.ScreenPointToRay(Input.mousePosition);
-            RaycastHit hit;
-
-            if (Physics.Raycast(ray, out hit))
+            if (spawnPoint != null && columnHeights[columnTag] < 6)
             {
-                string columnTag = hit.collider.tag;
-                Transform spawnPoint = SpawnOnGrid(columnTag);
-                Debug.Log(hit.collider.gameObject.name);
+                ChipSpawner(columnTag);
+                isChipFalling = true;
 
-                if (spawnPoint != null && columnHeights[columnTag] < 6)
-                {
-                    ChipSpawner(columnTag);
-                    isChipFalling = true;
-
-                }
-            
             }
+        
         }
-    
+        }
     }
 
     private Dictionary<string, int> columnHeights = new Dictionary<string, int>
@@ -95,13 +105,41 @@ public class GameLogicController : MonoBehaviour
     }
     private int[,] gridState = new int[7, 6]; // 7 columns (A-G), 6 rows (1-6)
 
+    public GameObject arrowIndicator; // Assign in Inspector
+    private Dictionary<string, Vector3> columnPositions = new Dictionary<string, Vector3>();
+
+    void Start()
+    {
+        // Set predefined positions for the arrow above each column
+        columnPositions["A"] = A7Spawn.position + Vector3.up * 1.5f;
+        columnPositions["B"] = B7Spawn.position + Vector3.up * 1.5f;
+        columnPositions["C"] = C7Spawn.position + Vector3.up * 1.5f;
+        columnPositions["D"] = D7Spawn.position + Vector3.up * 1.5f;
+        columnPositions["E"] = E7Spawn.position + Vector3.up * 1.5f;
+        columnPositions["F"] = F7Spawn.position + Vector3.up * 1.5f;
+        columnPositions["G"] = G7Spawn.position + Vector3.up * 1.5f;
+
+        arrowIndicator.SetActive(false); // Hide initially
+    }
+
+    void PlayerArrow(string columnTag)
+    {
+        if (columnPositions.ContainsKey(columnTag))
+        {
+            arrowIndicator.transform.position = columnPositions[columnTag];
+            arrowIndicator.SetActive(true);
+        }
+        else
+        {
+            arrowIndicator.SetActive(false);
+        }
+    }
+
+
     void ChipSpawner(string columnTag)
     {   
-        if (isChipFalling) 
-        {
-            Debug.Log("ChipSpawner blocked: a chip is still falling.");
-            return; 
-        }  
+        if (isChipFalling) return; 
+          
         Quaternion rotation = Quaternion.Euler(0, 90, 0);
         Transform spawnPoint = SpawnOnGrid(columnTag);
 
