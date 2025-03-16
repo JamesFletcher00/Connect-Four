@@ -33,13 +33,15 @@ public class GameLogicController : MonoBehaviour
 
     void Update()
     {
-        if(redTurn){
+        if(redTurn && roundActive){
             playerTurn.text = "Red's Turn!";
             playerTurn.color = Color.red;
-        }else if (!redTurn){
+        }else if (!redTurn && roundActive){
             playerTurn.text = "Yellow's Turn!";
             playerTurn.color = Color.yellow;
         }
+        RedScore.text = redScore.ToString();
+        YellowScore.text = yellowScore.ToString();
 
         if(isChipFalling) return;
         
@@ -204,8 +206,18 @@ public class GameLogicController : MonoBehaviour
         {
             roundActive = false;
 
-            playerTurn.text = ("Game Over! " + (gridState[col, row] == 1 ? "Red" : "Yellow") + " Wins!");
-        }
+            if (gridState[col, row] == 1)
+            {
+                redScore++; // Increase Red's score
+                playerTurn.text = "Game Over! Red Wins!";
+                playerTurn.color = Color.red;
+            }
+            else
+            {
+                yellowScore++; // Increase Yellow's score
+                playerTurn.text = "Game Over! Yellow Wins!";
+                playerTurn.color = Color.yellow;
+            }        }
     }
     bool CheckForWin(int col, int row)
     {
