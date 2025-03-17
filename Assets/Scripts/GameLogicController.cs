@@ -29,7 +29,7 @@ public class GameLogicController : MonoBehaviour
     public TMP_Text YellowScore;
     public int redScore;
     public int yellowScore;
-
+    public GameObject playAgainButton;
 
     void Update()
     {
@@ -137,6 +137,7 @@ public class GameLogicController : MonoBehaviour
         columnPositions["G"] = G7Spawn.position + Vector3.up * 1.5f;
 
         arrowIndicator.SetActive(false); // Hide initially
+        playAgainButton.SetActive(false);
     }
 
     void PlayerArrow(string columnTag)
@@ -208,16 +209,50 @@ public class GameLogicController : MonoBehaviour
 
             if (gridState[col, row] == 1)
             {
-                redScore++; // Increase Red's score
-                playerTurn.text = "Game Over! Red Wins!";
-                playerTurn.color = Color.red;
+                RedWin();
             }
             else
             {
-                yellowScore++; // Increase Yellow's score
-                playerTurn.text = "Game Over! Yellow Wins!";
-                playerTurn.color = Color.yellow;
-            }        }
+                YellowWin();
+            }        
+            }
+    }
+
+    public void RestartGame()
+    {
+    // Reset the grid state
+        for (int col = 0; col < 7; col++)
+        {
+            for (int row = 0; row < 6; row++)
+            {
+                gridState[col, row] = 0;
+            }
+        }
+
+        // Destroy all chips from the previous round
+        GameObject[] chips = GameObject.FindGameObjectsWithTag("Chip");
+        foreach (GameObject chip in chips)
+        {
+            Destroy(chip);
+        }      
+
+        redTurn = true;
+        roundActive = true;
+        playAgainButton.SetActive(false);  
+    }
+    void RedWin()
+    {
+        redScore++; // Increase Red's score
+        playerTurn.text = "Game Over! Red Wins!";
+        playerTurn.color = Color.red;
+        playAgainButton.SetActive(true);
+    }
+    void YellowWin()
+    {
+        yellowScore++; // Increase Yellow's score
+        playerTurn.text = "Game Over! Yellow Wins!";
+        playerTurn.color = Color.yellow;
+        playAgainButton.SetActive(true);
     }
     bool CheckForWin(int col, int row)
     {

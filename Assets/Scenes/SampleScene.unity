@@ -1204,7 +1204,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   redChip: {fileID: 7857708419565910905, guid: 78a3c035defd8ff42bd973c15f6b6692, type: 3}
   yellowChip: {fileID: 7847581352234652147, guid: 82cf1b477d60fa34b933b3cdb34e86e2, type: 3}
-  arrow: {fileID: 5771562640836569200, guid: bb4947e5b60ff864c9be8f380713d7db, type: 3}
+  arrow: {fileID: 0}
   A1: {fileID: 1669787085}
   A2: {fileID: 1912573359}
   A3: {fileID: 742877802}
@@ -1261,6 +1261,7 @@ MonoBehaviour:
   YellowScore: {fileID: 1406959435}
   redScore: 0
   yellowScore: 0
+  playAgainButton: {fileID: 1176801903}
   arrowIndicator: {fileID: 1399332132}
 --- !u!4 &264759922
 Transform:
@@ -4476,7 +4477,19 @@ MonoBehaviour:
   m_TargetGraphic: {fileID: 1176801905}
   m_OnClick:
     m_PersistentCalls:
-      m_Calls: []
+      m_Calls:
+      - m_Target: {fileID: 264759921}
+        m_TargetAssemblyTypeName: GameLogicController, Assembly-CSharp
+        m_MethodName: RestartGame
+        m_Mode: 1
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
 --- !u!1001 &1185864783
 PrefabInstance:
   m_ObjectHideFlags: 0
