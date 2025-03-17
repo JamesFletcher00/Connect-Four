@@ -33,6 +33,7 @@ public class GameLogicController : MonoBehaviour
 
     void Update()
     {
+        Debug.Log("22");
         if(redTurn && roundActive){
             playerTurn.text = "Red's Turn!";
             playerTurn.color = Color.red;
@@ -239,6 +240,8 @@ public class GameLogicController : MonoBehaviour
         redTurn = true;
         roundActive = true;
         playAgainButton.SetActive(false);  
+        redTurn = true;
+        isChipFalling = false;
     }
     void RedWin()
     {
