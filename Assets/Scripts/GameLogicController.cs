@@ -33,7 +33,6 @@ public class GameLogicController : MonoBehaviour
 
     void Update()
     {
-        Debug.Log("22");
         if(redTurn && roundActive){
             playerTurn.text = "Red's Turn!";
             playerTurn.color = Color.red;
@@ -53,8 +52,7 @@ public class GameLogicController : MonoBehaviour
         {
             string columnTag = hit.collider.tag;
             Transform spawnPoint = SpawnOnGrid(columnTag);
-            Debug.Log(hit.collider.gameObject.name);
-
+            
             if (columnPositions.ContainsKey(columnTag))
             {
                 PlayerArrow(columnTag); // Call PlayerArrow function
@@ -219,8 +217,15 @@ public class GameLogicController : MonoBehaviour
             }
     }
 
+
+    private string[] columns = { "A", "B", "C", "D", "E", "F", "G" };
+    
     public void RestartGame()
     {
+        for (int i = 0; i < 7; i++)  // 7 columns
+        {
+            columnHeights[columns[i]] = 0;
+        }
     // Reset the grid state
         for (int col = 0; col < 7; col++)
         {
