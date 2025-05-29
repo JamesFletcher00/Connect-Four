@@ -1,2 +1,12 @@
 fileFormatVersion: 2
 guid: be24d96a296671d47abac9df23598262
+MonoImporter:
+  externalObjects: {}
+  serializedVersion: 2
+  defaultReferences:
+  - chipSound: {fileID: 8300000, guid: 2f8b816141583654591da1350b82b244, type: 3}
+  executionOrder: 0
+  icon: {instanceID: 0}
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 

@@ -308,6 +308,7 @@ MonoBehaviour:
   - {fileID: 329968358}
   - {fileID: 1705459188}
   - {fileID: 194434402}
+  chipSound: {fileID: 8300000, guid: 2f8b816141583654591da1350b82b244, type: 3}
 --- !u!1 &68291208
 GameObject:
   m_ObjectHideFlags: 0
@@ -1173,6 +1174,7 @@ MonoBehaviour:
   - {fileID: 1216093197}
   - {fileID: 1619501352}
   - {fileID: 1130536931}
+  chipSound: {fileID: 8300000, guid: 2f8b816141583654591da1350b82b244, type: 3}
 --- !u!1 &264759920
 GameObject:
   m_ObjectHideFlags: 0
@@ -1899,6 +1901,7 @@ MonoBehaviour:
   - {fileID: 1456040355}
   - {fileID: 1652431324}
   - {fileID: 986664652}
+  chipSound: {fileID: 8300000, guid: 2f8b816141583654591da1350b82b244, type: 3}
 --- !u!1 &497393606
 GameObject:
   m_ObjectHideFlags: 0
@@ -4358,6 +4361,7 @@ MonoBehaviour:
   - {fileID: 104932829}
   - {fileID: 354013845}
   - {fileID: 1347075570}
+  chipSound: {fileID: 8300000, guid: 2f8b816141583654591da1350b82b244, type: 3}
 --- !u!1 &1176801903
 GameObject:
   m_ObjectHideFlags: 0
@@ -6181,6 +6185,7 @@ MonoBehaviour:
   - {fileID: 1233988962}
   - {fileID: 1841973061}
   - {fileID: 1071546291}
+  chipSound: {fileID: 8300000, guid: 2f8b816141583654591da1350b82b244, type: 3}
 --- !u!1 &1619501351
 GameObject:
   m_ObjectHideFlags: 0
@@ -6938,6 +6943,7 @@ MonoBehaviour:
   - {fileID: 862727125}
   - {fileID: 1516811877}
   - {fileID: 1207507023}
+  chipSound: {fileID: 8300000, guid: 2f8b816141583654591da1350b82b244, type: 3}
 --- !u!1 &1841973060
 GameObject:
   m_ObjectHideFlags: 0
@@ -7530,6 +7536,7 @@ MonoBehaviour:
   - {fileID: 779472995}
   - {fileID: 1221254196}
   - {fileID: 125878125}
+  chipSound: {fileID: 8300000, guid: 2f8b816141583654591da1350b82b244, type: 3}
 --- !u!1 &1955523095
 GameObject:
   m_ObjectHideFlags: 0
