@@ -7,20 +7,15 @@ public class ColumnTrigger : MonoBehaviour
     public string columnLetter; // Example: "A", "B", etc.
     public List<Transform> rowPositions = new List<Transform>(); // Assign row positions in order (A1 to A7)
     private HashSet<Transform> occupiedSlots = new HashSet<Transform>(); // Track filled slots
-    public AudioClip chipSound;
-    private AudioSource audioSource;
-    private HashSet<Collider> triggeredChips = new HashSet<Collider>();
 
 private void OnTriggerStay(Collider other)
+{
+    if (other.CompareTag("Chip"))
     {
-        if (other.CompareTag("Chip") && !triggeredChips.Contains(other))
-        {
-            audioSource.PlayOneShot(chipSound);
-            triggeredChips.Add(other);
-            Transform targetPosition = GetAvailableSlot();
+        Transform targetPosition = GetAvailableSlot();
 
-        }
     }
+}
 
 
     Transform GetAvailableSlot()

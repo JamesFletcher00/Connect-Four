@@ -7,11 +7,14 @@ using TMPro;
 public class GameLogicController : MonoBehaviour
 {
     private bool isChipFalling = false;
+
     public GameObject redChip;
     public GameObject yellowChip;
     private GameObject chip;
+
     public GameObject arrow;
     private GameObject playerArrow;
+
     public Transform A1, A2, A3, A4, A5, A6;
     public Transform B1, B2, B3, B4, B5, B6;
     public Transform C1, C2, C3, C4, C5, C6;
@@ -21,6 +24,7 @@ public class GameLogicController : MonoBehaviour
     public Transform G1, G2, G3, G4, G5, G6;
 
     public Transform A7Spawn, B7Spawn, C7Spawn, D7Spawn, E7Spawn, F7Spawn, G7Spawn;
+
     public bool redTurn = true;
     public TMP_Text playerTurn;
     public bool roundActive;
@@ -31,102 +35,20 @@ public class GameLogicController : MonoBehaviour
     public int yellowScore;
     public GameObject playAgainButton;
 
-    void Update()
-    {
-        if(redTurn && roundActive){
-            playerTurn.text = "Red's Turn!";
-            playerTurn.color = Color.red;
-        }else if (!redTurn && roundActive){
-            playerTurn.text = "Yellow's Turn!";
-            playerTurn.color = Color.yellow;
-        }
-        RedScore.text = redScore.ToString();
-        YellowScore.text = yellowScore.ToString();
-
-        if(isChipFalling) return;
-        
-        Ray ray = Camera.main.ScreenPointToRay(Input.mousePosition);
-        RaycastHit hit;
-
-        if (Physics.Raycast(ray, out hit))
-        {
-            string columnTag = hit.collider.tag;
-            Transform spawnPoint = SpawnOnGrid(columnTag);
-            
-            if (columnPositions.ContainsKey(columnTag))
-            {
-                PlayerArrow(columnTag); // Call PlayerArrow function
-            }
-            else
-            {
-                arrowIndicator.SetActive(false);
-            }
-
-        if(Input.GetKeyDown(KeyCode.Mouse0))
-        {
-            if (spawnPoint != null && columnHeights[columnTag] < 6)
-            {
-                ChipSpawner(columnTag);
-                isChipFalling = true;
-
-            }
-        
-        }
-        }
-    }
+    public GameObject arrowIndicator; // Assign in Inspector
 
     private Dictionary<string, int> columnHeights = new Dictionary<string, int>
     {
-        {"A", 0},{"B", 0},{"C", 0}, {"D", 0},{"E", 0}, {"F", 0},{"G", 0}
+        {"A", 0},{"B", 0},{"C", 0},{"D", 0},{"E", 0},{"F", 0},{"G", 0}
     };
 
-    Transform GetNextAvailableSlot(string columnTag)
-    {
-        if (!columnHeights.ContainsKey(columnTag)) return null;
-
-        int rowIndex = columnHeights[columnTag];
-        if (rowIndex >= 6) return null;
-
-        return GetGridPosition(columnTag, rowIndex);
-    }
-
-    Transform GetGridPosition(string columnTag, int rowIndex)
-{
-    // Replace these with actual row transforms
-    Dictionary<string, Transform[]> columnPositions = new Dictionary<string, Transform[]>
-    {
-        {"A", new Transform[] { A1, A2, A3, A4, A5, A6 }},
-        {"B", new Transform[] { B1, B2, B3, B4, B5, B6 }},
-        {"C", new Transform[] { C1, C2, C3, C4, C5, C6 }},
-        {"D", new Transform[] { D1, D2, D3, D4, D5, D6 }},
-        {"E", new Transform[] { E1, E2, E3, E4, E5, E6 }},
-        {"F", new Transform[] { F1, F2, F3, F4, F5, F6 }},
-        {"G", new Transform[] { G1, G2, G3, G4, G5, G6 }}
-    };
-
-    return columnPositions[columnTag][rowIndex]; // Return the correct Transform
-}
-
-    Transform SpawnOnGrid(string tag)
-    {
-        if(tag == "A") return A7Spawn;
-        if(tag == "B") return B7Spawn;
-        if(tag == "C") return C7Spawn;
-        if(tag == "D") return D7Spawn;
-        if(tag == "E") return E7Spawn;
-        if(tag == "F") return F7Spawn;
-        if(tag == "G") return G7Spawn;
-
-        return null;
-    }
-    private int[,] gridState = new int[7, 6]; // 7 columns (A-G), 6 rows (1-6)
-
-    public GameObject arrowIndicator; // Assign in Inspector
     private Dictionary<string, Vector3> columnPositions = new Dictionary<string, Vector3>();
+    private int[,] gridState = new int[7, 6]; // 7 columns, 6 rows
+    private string[] columns = { "A", "B", "C", "D", "E", "F", "G" };
 
     void Start()
     {
-        // Set predefined positions for the arrow above each column
+        // Set predefined arrow indicator positions
         columnPositions["A"] = A7Spawn.position + Vector3.up * 1.5f;
         columnPositions["B"] = B7Spawn.position + Vector3.up * 1.5f;
         columnPositions["C"] = C7Spawn.position + Vector3.up * 1.5f;
@@ -135,8 +57,50 @@ public class GameLogicController : MonoBehaviour
         columnPositions["F"] = F7Spawn.position + Vector3.up * 1.5f;
         columnPositions["G"] = G7Spawn.position + Vector3.up * 1.5f;
 
-        arrowIndicator.SetActive(false); // Hide initially
+        arrowIndicator.SetActive(false);
         playAgainButton.SetActive(false);
+    }
+
+    void Update()
+    {
+        if (redTurn && roundActive)
+        {
+            playerTurn.text = "Red's Turn!";
+            playerTurn.color = Color.red;
+        }
+        else if (!redTurn && roundActive)
+        {
+            playerTurn.text = "Yellow's Turn!";
+            playerTurn.color = Color.yellow;
+        }
+
+        RedScore.text = redScore.ToString();
+        YellowScore.text = yellowScore.ToString();
+
+        if (isChipFalling || !roundActive) return;
+
+        Ray ray = Camera.main.ScreenPointToRay(Input.mousePosition);
+        RaycastHit hit;
+
+        if (Physics.Raycast(ray, out hit))
+        {
+            string columnTag = hit.collider.tag;
+            Transform spawnPoint = SpawnOnGrid(columnTag);
+
+            if (columnPositions.ContainsKey(columnTag))
+                PlayerArrow(columnTag);
+            else
+                arrowIndicator.SetActive(false);
+
+            if (Input.GetKeyDown(KeyCode.Mouse0))
+            {
+                if (spawnPoint != null && columnHeights[columnTag] < 6)
+                {
+                    ChipSpawner(columnTag);
+                    isChipFalling = true;
+                }
+            }
+        }
     }
 
     void PlayerArrow(string columnTag)
@@ -152,131 +116,123 @@ public class GameLogicController : MonoBehaviour
         }
     }
 
-
     void ChipSpawner(string columnTag)
-    {   
-        if (isChipFalling) return; 
-          
+    {
+        if (isChipFalling) return;
+
         Quaternion rotation = Quaternion.Euler(0, 90, 0);
         Transform spawnPoint = SpawnOnGrid(columnTag);
-
         Transform targetSlot = GetNextAvailableSlot(columnTag);
         int columnIndex = columnTag[0] - 'A';
-        int rowIndex = columnHeights[columnTag]; 
+        int rowIndex = columnHeights[columnTag];
 
-        if (targetSlot == null) return; // No available slot, column is full
+        if (targetSlot == null) return;
 
         if (redTurn && roundActive)
         {
             redTurn = false;
-            chip = Instantiate(redChip, spawnPoint.position, rotation);   
-            gridState[columnIndex, rowIndex] = 1;      //stores red chip in grid     
+            chip = Instantiate(redChip, spawnPoint.position, rotation);
+            gridState[columnIndex, rowIndex] = 1;
         }
         else if (!redTurn && roundActive)
         {
             redTurn = true;
             chip = Instantiate(yellowChip, spawnPoint.position, rotation);
-            gridState[columnIndex, rowIndex] = -1;  //stores yellow chip in grid
+            gridState[columnIndex, rowIndex] = -1;
         }
-        else
-        {
-            return;
-        }
+        else return;
+
         isChipFalling = true;
         StartCoroutine(ChipMovement(chip, targetSlot.position, columnTag, columnIndex, rowIndex));
-
     }
 
     IEnumerator ChipMovement(GameObject chip, Vector3 targetPosition, string columnTag, int col, int row)
     {
-        float speed = 5f; // Adjust for slower/faster fall
-        while (chip.transform.position.y > targetPosition.y)
+        float speed = 5f;
+
+        while (Vector3.Distance(chip.transform.position, targetPosition) > 0.01f)
         {
             chip.transform.position = Vector3.MoveTowards(
-                chip.transform.position, targetPosition, (speed*2) * Time.deltaTime);
+                chip.transform.position, targetPosition, speed * 2 * Time.deltaTime);
             yield return null;
         }
 
-        chip.transform.position = targetPosition; // Ensure precise stop
+        chip.transform.position = targetPosition;
         columnHeights[columnTag]++;
-
         isChipFalling = false;
+
+        // ✅ Play sound after chip has landed
+        if (SoundManager.Instance != null)
+            SoundManager.Instance.PlayChipSound();
+        else
+            Debug.LogWarning("SoundManager not found!");
 
         if (CheckForWin(col, row))
         {
             roundActive = false;
-
             if (gridState[col, row] == 1)
-            {
                 RedWin();
-            }
             else
-            {
                 YellowWin();
-            }        
-            }
-    }
-
-
-    private string[] columns = { "A", "B", "C", "D", "E", "F", "G" };
-    
-    public void RestartGame()
-    {
-        for (int i = 0; i < 7; i++)  // 7 columns
-        {
-            columnHeights[columns[i]] = 0;
         }
-    // Reset the grid state
-        for (int col = 0; col < 7; col++)
+    }
+
+    Transform GetNextAvailableSlot(string columnTag)
+    {
+        if (!columnHeights.ContainsKey(columnTag)) return null;
+
+        int rowIndex = columnHeights[columnTag];
+        if (rowIndex >= 6) return null;
+
+        return GetGridPosition(columnTag, rowIndex);
+    }
+
+    Transform GetGridPosition(string columnTag, int rowIndex)
+    {
+        Dictionary<string, Transform[]> columnPositions = new Dictionary<string, Transform[]>
         {
-            for (int row = 0; row < 6; row++)
-            {
-                gridState[col, row] = 0;
-            }
+            {"A", new Transform[] { A1, A2, A3, A4, A5, A6 }},
+            {"B", new Transform[] { B1, B2, B3, B4, B5, B6 }},
+            {"C", new Transform[] { C1, C2, C3, C4, C5, C6 }},
+            {"D", new Transform[] { D1, D2, D3, D4, D5, D6 }},
+            {"E", new Transform[] { E1, E2, E3, E4, E5, E6 }},
+            {"F", new Transform[] { F1, F2, F3, F4, F5, F6 }},
+            {"G", new Transform[] { G1, G2, G3, G4, G5, G6 }}
+        };
+
+        return columnPositions[columnTag][rowIndex];
+    }
+
+    Transform SpawnOnGrid(string tag)
+    {
+        switch (tag)
+        {
+            case "A": return A7Spawn;
+            case "B": return B7Spawn;
+            case "C": return C7Spawn;
+            case "D": return D7Spawn;
+            case "E": return E7Spawn;
+            case "F": return F7Spawn;
+            case "G": return G7Spawn;
+            default: return null;
         }
+    }
 
-        // Destroy all chips from the previous round
-        GameObject[] chips = GameObject.FindGameObjectsWithTag("Chip");
-        foreach (GameObject chip in chips)
-        {
-            Destroy(chip);
-        }      
-
-        redTurn = true;
-        roundActive = true;
-        playAgainButton.SetActive(false);  
-        redTurn = true;
-        isChipFalling = false;
-    }
-    void RedWin()
-    {
-        redScore++; // Increase Red's score
-        playerTurn.text = "Game Over! Red Wins!";
-        playerTurn.color = Color.red;
-        playAgainButton.SetActive(true);
-    }
-    void YellowWin()
-    {
-        yellowScore++; // Increase Yellow's score
-        playerTurn.text = "Game Over! Yellow Wins!";
-        playerTurn.color = Color.yellow;
-        playAgainButton.SetActive(true);
-    }
     bool CheckForWin(int col, int row)
     {
         int player = gridState[col, row];
-        if (player == 0) return false; // Empty slot, no win possible
+        if (player == 0) return false;
 
-        return CheckDirection(col, row, 1, 0, player) // Horizontal
-            || CheckDirection(col, row, 0, 1, player) // Vertical
-            || CheckDirection(col, row, 1, 1, player) // Diagonal \
-            || CheckDirection(col, row, 1, -1, player); // Diagonal /
+        return CheckDirection(col, row, 1, 0, player) ||  // Horizontal
+               CheckDirection(col, row, 0, 1, player) ||  // Vertical
+               CheckDirection(col, row, 1, 1, player) ||  // Diagonal \
+               CheckDirection(col, row, 1, -1, player);   // Diagonal /
     }
+
     bool CheckDirection(int col, int row, int colDir, int rowDir, int player)
     {
-        int count = 1; // Include the placed chip
+        int count = 1;
 
-        // Check in the positive direction
         for (int i = 1; i < 4; i++)
         {
             int checkCol = col + i * colDir;
@@ -286,7 +242,6 @@ public class GameLogicController : MonoBehaviour
             else break;
         }
 
-        // Check in the negative direction
         for (int i = 1; i < 4; i++)
         {
             int checkCol = col - i * colDir;
@@ -299,4 +254,37 @@ public class GameLogicController : MonoBehaviour
         return count >= 4;
     }
 
+    public void RestartGame()
+    {
+        for (int i = 0; i < 7; i++)
+            columnHeights[columns[i]] = 0;
+
+        for (int col = 0; col < 7; col++)
+            for (int row = 0; row < 6; row++)
+                gridState[col, row] = 0;
+
+        foreach (GameObject chip in GameObject.FindGameObjectsWithTag("Chip"))
+            Destroy(chip);
+
+        redTurn = true;
+        roundActive = true;
+        isChipFalling = false;
+        playAgainButton.SetActive(false);
+    }
+
+    void RedWin()
+    {
+        redScore++;
+        playerTurn.text = "Game Over! Red Wins!";
+        playerTurn.color = Color.red;
+        playAgainButton.SetActive(true);
+    }
+
+    void YellowWin()
+    {
+        yellowScore++;
+        playerTurn.text = "Game Over! Yellow Wins!";
+        playerTurn.color = Color.yellow;
+        playAgainButton.SetActive(true);
+    }
 }
